@@ -24,7 +24,7 @@ class MemberImport implements ToModel,  WithHeadingRow, SkipsOnError, WithValida
     public function model(array $row)
     {
         return new Member([
-            'first_name' => $row['first_name'],
+            'first_name' => $rw['first_name'],
             'last_name' => $row['last_name'],
             'gender' => $row['gender'],
             'birthday' => $row['birthday'],
