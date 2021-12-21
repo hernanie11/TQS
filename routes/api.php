@@ -7,6 +7,7 @@ use App\Http\Controllers\AccountManagementController;
 use App\Http\Controllers\StoreManagementController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MemberManagementController;
+use App\Http\Controllers\PointManagementController;
 use App\Http\Controllers\Auth\AuthController;
 
 /*
