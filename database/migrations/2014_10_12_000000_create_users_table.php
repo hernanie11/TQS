@@ -64,8 +64,6 @@ class CreateUsersTable extends Migration
         Schema::create('points', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('member_id');
-            $table->string('store_code');
-            $table->int('point_sync_id');
             $table->double('points', 8, 2);
             $table->unsignedInteger('created_by')->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
