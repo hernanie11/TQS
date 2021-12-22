@@ -66,6 +66,12 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::post('/member/import-members', [MemberManagementController::class, 'ImportMember']); //custom import
         Route::post('/member/check-members', [MemberManagementController::class, 'CheckMember']); //custom import
 
+        //Points Management
+        Route::get('/earnedpoints/{pointsperpage}', [PointManagementController::class, 'ListPointsTransaction']);
+        Route::get('/points/{member_id}', [PointManagementController::class, 'ListMemberPoints']);
+        Route::get('/points/totalpoints/{member_id}', [PointManagementController::class, 'SumPointsbyMember']);
+        
+
 
         Route::post('/logout', [AuthController::class, 'logout']);
    });+

@@ -18,10 +18,16 @@ class PointManagementController extends Controller
     }
 
     public function  SumPointsbyMember(Request $request){
+        $member_id = $request->member_id;
+        $sumpointsbymember = PointManagementServices::Sum_Points_by_Member($member_id);
+        return $sumpointsbymember;
 
     }
 
     public function ListPointsTransaction(Request $request){
+        $pointsperpage = $request->pointsperpage;
+        $transaction = PointManagementServices::List_Points_Transaction($pointsperpage);
+        return $transaction;
 
     }
 }

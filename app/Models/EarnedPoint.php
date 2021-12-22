@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Point extends Model
+class EarnedPoint extends Model
 {
     use HasFactory;
-    protected $table = 'points';
+    protected $table = 'earnedpoints';
     protected $fillable = ['member_id', 'points', 'created_by'];
 
     public function members(){

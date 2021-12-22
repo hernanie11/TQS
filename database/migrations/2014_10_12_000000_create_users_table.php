@@ -61,10 +61,13 @@ class CreateUsersTable extends Migration
             ->onDelete('set null');  
         });
 
-        Schema::create('points', function (Blueprint $table) {
+        Schema::create('earnedpoints', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('member_id');
-            $table->double('points', 8, 2);
+            $table->string('transaction_no');
+            $table->double('amount', 8, 2);
+            $table->double('points_earn', 8, 2);
+            $table->dateTime('transaction_datetime');
             $table->unsignedInteger('created_by')->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
@@ -96,7 +99,7 @@ class CreateUsersTable extends Migration
             $table->string('transaction_no');
             $table->double('amount', 8, 2);
             $table->double('points_earn', 8, 2);
-            $table->date('transaction_datetime');
+            $table->dateTime('transaction_datetime');
             $table->unsignedInteger('created_by')->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));

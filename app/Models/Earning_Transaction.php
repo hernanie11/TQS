@@ -8,6 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Earning_Transaction extends Model
 {
     use HasFactory;
+   
+    protected $fillable = [
+        'member_id', 
+        'transaction_no',
+        'amount', 
+        'points_earn',
+        'transaction_datetime'];
 
     public function users(){
         return $this->belongsTo(User::class);
