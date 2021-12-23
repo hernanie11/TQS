@@ -28,6 +28,36 @@ class PointManagementController extends Controller
         $pointsperpage = $request->pointsperpage;
         $transaction = PointManagementServices::List_Points_Transaction($pointsperpage);
         return $transaction;
+    }
 
+    public function Create(Request $request){
+        $member_id = $request->member_id;
+        $transaction_no = $request->transaction_no;
+        $amount = $request->amount;
+        $points_earn = $request->points_earn;
+        $transaction_datetime = $request->transaction_datetime;
+        $created_by = auth('sanctum')->user()->id;
+        $create = PointManagementServices::CreateTransactions($member_id, $transaction_no, $amount, $points_earn, $transaction_datetime, $created_by);
+        return $create;
+    }
+
+    public function ImportEarnedPoints(Request $request){
+        $all = $request->all();
+        $created_by = auth('sanctum')->user()->id;
+        $import = PointManagementServices::Import_Earned_Points($all, $created_by);
+        return $import; 
+    }
+
+    public function CheckEarnedPoints(Request $request){
+        $all = $request->all();
+        $check = PointManagementServices::Check_Earned_Points($all);
+        return $check;
+    }
+
+    public function SearchEarnedPoints(Request $request){
+        $searchvalue = $request->searchvalue;
+        $pointsperpage = $request->pointsperpage;
+        $search_details = PointManagementServices::Search_Earned_Points($searchvalue, $pointsperpage);
+        return $search_details;
     }
 }
