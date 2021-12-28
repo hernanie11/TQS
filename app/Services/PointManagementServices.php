@@ -27,7 +27,7 @@ class PointManagementServices{
         $list = EarnedPoint::select('earnedpoints.id','members.first_name', 'members.last_name', 'members.mobile_number','earnedpoints.transaction_no', 'earnedpoints.amount', 'earnedpoints.points_earn', 'earnedpoints.transaction_datetime')
          ->leftJoin('members', function($join){
              $join->on('earnedpoints.member_id', 'members.id');
-         })->orderBy('earnedpoints.transaction_datetime', 'DESC')->paginate($pointsperpage);;
+         })->orderBy('earnedpoints.created_at', 'DESC')->paginate($pointsperpage);;
          return $list;
     } 
 
@@ -61,13 +61,18 @@ class PointManagementServices{
         $points_earn = $allpoints['points_earn'];
         $transaction_datetime = $allpoints['transaction_datetime'];
 
-        if(EarnedPoint::where('member_id', $member_id)->where('transaction_datetime', $transaction_datetime)->where('transaction_no', $transaction_no)->exists()){
-            $exist = EarnedPoint::select('member_id', 'transaction_datetime')->where('member_id', $member_id)
-            ->where('transaction_datetime', $transaction_datetime)->first();
-
+        if(EarnedPoint::where('member_id', $member_id)->where('transaction_datetime', $transaction_datetime)->where('points_earn', $points_earn)->exists()){
+            if(EarnedPoint::where('transaction_no', $transaction_no)->exists()){
+                $exist = "Transaction_no Already Exists";
+            }
+            else{
+                $exist = EarnedPoint::select('member_id', 'transaction_datetime')->where('member_id', $member_id)
+                ->where('transaction_datetime', $transaction_datetime)->first();
+            }
             array_push($error, $exist);
         }
         else{
+            
             $earnpoints = EarnedPoint::create([
                 'member_id' => $member_id,
                 'transaction_no' => $transaction_no,
@@ -77,7 +82,7 @@ class PointManagementServices{
                 'created_by' => $created_by
             ]);
 
-            array_push($inserted_earnedpoints, $member_id);
+            array_push($inserted_earnedpoints, $earnpoints);
             array_push($error);
         }
 
@@ -99,7 +104,10 @@ class PointManagementServices{
 
     public static function Check_Earned_Points($all){
         $error = array();
+        $error2 = array();
         $data = array();
+        $message = collect();
+     
 
         foreach($all as $allpoints){
             $member_id = $allpoints['member_id'];
@@ -108,13 +116,39 @@ class PointManagementServices{
             $points_earn = $allpoints['points_earn'];
             $transaction_datetime = $allpoints['transaction_datetime'];
 
-            if(EarnedPoint::where('member_id', $member_id)->where('transaction_datetime', $transaction_datetime)->where('transaction_no', $transaction_no)->exists()){
+            if(EarnedPoint::where('transaction_no', $transaction_no)->exists()){
+                $exist2 = EarnedPoint::select('member_id', 'transaction_no')->where('transaction_no', $transaction_no)->first();
+                $res2 = "Transaction_no Already Exists!!";
+                array_push($error2, $exist2);
+            }
+
+            if(EarnedPoint::where('member_id', $member_id)->where('transaction_datetime', $transaction_datetime)->where('points_earn', $points_earn)->exists()){
+            
                 $exist = EarnedPoint::select('member_id', 'transaction_datetime')->where('member_id', $member_id)
                 ->where('transaction_datetime', $transaction_datetime)->first();
+                $res = 'earned points is already exist, please see the ref';
+            
+            
+
+
                  array_push($error, $exist);
+               //  $message = $res;
+                
              }
+             $message = "Duplicate Error";
        }
-       return response(['EarnedPointsExists' => $error]);
+
+    if(($error != NULL) || ($error2 != NULL)){
+        return response(['errors' => ['message' =>$message, 'earned_points_exist' => $error, 'transaction_no_exist' => $error2]], 200);
+    }
+    else{
+        return response(['message' => 'No Duplicates'],200);
+
+    }
+
+     
+    
+    
      }
 
      public static function Search_Earned_Points($searchvalue, $pointsperpage){

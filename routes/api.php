@@ -67,15 +67,16 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::post('/member/check-members', [MemberManagementController::class, 'CheckMember']); //custom import
 
         //EarnedPoints Management
-        Route::get('/earnedpoints/{pointsperpage}', [PointManagementController::class, 'ListPointsTransaction']);
+        Route::get('/earnedpoints/{pointsperpage}', [PointManagementController::class, 'ListPointsTransaction']); //List all Earned points Transactions with pagination
         Route::get('/points/{member_id}', [PointManagementController::class, 'ListMemberPoints']);
         Route::get('/points/totalpoints/{member_id}', [PointManagementController::class, 'SumPointsbyMember']);
 
-        Route::post('/test/points', [PointManagementController::class, 'Create']); //test only
+       
         Route::post('/points/import', [PointManagementController::class, 'ImportEarnedPoints']);//import
         Route::post('/points/check', [PointManagementController::class, 'CheckEarnedPoints']);//check 
         Route::post('/search-earnedpoints/{pointsperpage}', [PointManagementController::class, 'SearchEarnedPoints']);//search 
 
+        Route::post('/test/points', [PointManagementController::class, 'Create']); //test only
 
         Route::post('/logout', [AuthController::class, 'logout']);
    });

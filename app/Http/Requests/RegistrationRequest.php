@@ -28,21 +28,21 @@ class RegistrationRequest extends FormRequest
             'last_name' => 'required',
             'password' => 'required',
             'username' => 'required',
-            'role' => 'required',
-            'access_permission'
+            'role' => 'required|in:admin,cashier',
+            'access_permission' => 'required'
         ];
     
     }
 
-    public function message()
+    public function messages()
     {
         return [
             'password.required' => 'Password is required!',
             'username.required' => 'Username is required!',
             'first_name.required' => 'Firstname is required!',
             'last_name.required' => 'Lastname is required!',
-            'role.required' => 'Role is required!',
-            'access_permission.required' => 'Access Permission is required!'
+            'access_permission.required' => 'Access Permission is required!',
+            'role.in' => 'Role is must be admin and cashier!',
 
         ];
     }

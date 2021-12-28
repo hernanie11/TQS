@@ -43,17 +43,17 @@ class AuthController extends Controller
     //       }
     //   }
 
-    if(($role != "admin") and ($role != "cashier")){
-        return response([
-            'error_message' => $role . ' is not a value'], 200);
-    }
+    // if(($role != "admin") and ($role != "cashier")){
+    //     return response([
+    //         'error_message' => $role . ' is not a value'], 200);
+    // }
    
 
 
     if($role == "admin"){
 
         foreach($access_permission as $access){
-            if(($access != "members") and($access != "user-accounts") and ($access != "stores") and ($access != "earned-redeemed") and ($access != "transactions") and ($access != "generate-file")){
+            if(($access != "members") and($access != "user-accounts") and ($access != "stores") and ($access != "earned-points") and ($access != "redeemed_points") and ($access != "generate_file")){
                 return response([
                     'error_message' => 'No such '.$access .' value'], 200);
             }
@@ -62,6 +62,11 @@ class AuthController extends Controller
               return response([
                   'message' => 'Earning access not assigneable to role admin '], 200);
           }
+
+          if($access == "transactions"){
+            return response([
+                'message' => 'Transaction access not assigneable to role admin '], 200);
+        }
           
         }
     }
@@ -71,7 +76,7 @@ class AuthController extends Controller
 
           foreach($access_permission as $access){
 
-            if(($access != "earnings") and($access != "redeeming") and ($access != "members") and ($access != "transactions")){
+            if(($access != "earning") and($access != "redeeming") and ($access != "members") and ($access != "transactions") and ($access != "generate_file")){
                 return response([
                     'error_message' => 'No such '.$access .' value'], 200);
             }
@@ -85,13 +90,15 @@ class AuthController extends Controller
                 return response([
                     'message' => 'store access not assigneable to role cashier '], 200);
             }
-            if($access == "generate-file"){
-                return response([                                                                                                                  
-                    'message' => 'Generate File access not assigneable to role cashier '], 200);
-            }
-            if($access == "earned-redeemed"){
+           
+            if($access == "redeemed-points"){
                 return response([
-                    'message' => 'Earned/Redeemed access not assigneable to role cashier '], 200);
+                    'message' => 'Redeemed-Points access not assigneable to role cashier '], 200);
+            }
+
+            if($access == "earned-points"){
+                return response([
+                    'message' => 'Earned-Points access not assigneable to role cashier '], 200);
             }
           }
       }

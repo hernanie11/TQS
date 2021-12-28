@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Services\PointManagementServices;
+use App\Http\Requests\EarnedPointRequest;
 
 class PointManagementController extends Controller
 {
@@ -41,14 +42,15 @@ class PointManagementController extends Controller
         return $create;
     }
 
-    public function ImportEarnedPoints(Request $request){
+    public function ImportEarnedPoints(EarnedPointRequest $request){
         $all = $request->all();
         $created_by = auth('sanctum')->user()->id;
         $import = PointManagementServices::Import_Earned_Points($all, $created_by);
         return $import; 
     }
 
-    public function CheckEarnedPoints(Request $request){
+    public function CheckEarnedPoints(EarnedPointRequest $request){
+        $data = [ 'data' => $request->all() ];
         $all = $request->all();
         $check = PointManagementServices::Check_Earned_Points($all);
         return $check;
