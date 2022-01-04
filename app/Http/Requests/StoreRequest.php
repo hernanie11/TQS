@@ -30,7 +30,15 @@ class StoreRequest extends FormRequest
             'area' => 'required',
             'region' => 'required',
             'cluster' => 'required',
-            'business_model' => 'required'
+            'business_model' => 'required|in:FOX, FO'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'business_model.in' => 'Business Category must be FO or FOX!',
+
         ];
     }
 }

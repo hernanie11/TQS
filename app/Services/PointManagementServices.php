@@ -27,7 +27,7 @@ class PointManagementServices{
         $list = EarnedPoint::select('earnedpoints.id','members.first_name', 'members.last_name', 'members.mobile_number','earnedpoints.transaction_no', 'earnedpoints.amount', 'earnedpoints.points_earn', 'earnedpoints.transaction_datetime')
          ->leftJoin('members', function($join){
              $join->on('earnedpoints.member_id', 'members.id');
-         })->orderBy('earnedpoints.created_at', 'DESC')->paginate($pointsperpage);;
+         })->orderBy('earnedpoints.created_at', 'DESC')->paginate($pointsperpage);
          return $list;
     } 
 

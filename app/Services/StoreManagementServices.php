@@ -41,11 +41,11 @@ class StoreManagementServices
         }
         else {
             
-            if(($business_model != "FO") and ($business_model != "FOX")){
-                return response([
-                    'error_message' => $business_model . ' is not a value'], 200);
-            }
-            else{
+            // if(($business_model != "FO") and ($business_model != "FOX")){
+            //     return response([
+            //         'error_message' => $business_model . ' is not a value'], 200);
+            // }
+            
                 $store = Store::create([
                     'businesscategory_id' => 1,
                     'code' => $code,
@@ -60,7 +60,7 @@ class StoreManagementServices
                 ]);
                 //return $store;
                 return response()->json(['message' => 'Store Successfully created', 'isCreated' => true]);     
-           }
+           
 
        }
     }

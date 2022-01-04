@@ -35,4 +35,10 @@ class RedeemManagementController extends Controller
         $import = RedeemManagementServices::Import_Redeem_Transaction($all, $created_by);
         return $import;
     }
+
+    public function List(Request $request){
+        $redeemsperpage = $request['redeemsperpage'];
+        $redeemlist = RedeemManagementServices::List_Redeeming_Transactions($redeemsperpage);
+        return $redeemlist;
+    }
 }

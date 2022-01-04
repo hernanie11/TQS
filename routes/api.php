@@ -83,6 +83,8 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::post('/redeem-request', [RedeemManagementController::class, 'Create']);
         Route::post('/redeem/check', [RedeemManagementController::class, 'Check']);
         Route::post('/redeem/import', [RedeemManagementController::class, 'Import']);
+        Route::get('/redeem/{redeemsperpage}', [RedeemManagementController::class, 'List']);
+
 
         Route::post('/logout', [AuthController::class, 'logout']);
    });
