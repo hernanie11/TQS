@@ -41,7 +41,7 @@ class StoreManagementServices
         }
         else {
             
-            if(($business_model != "FOX") and ($business_model != "FOX")){
+            if(($business_model != "FO") and ($business_model != "FOX")){
                 return response([
                     'error_message' => $business_model . ' is not a value'], 200);
             }

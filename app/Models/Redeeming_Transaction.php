@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Redeeming_Transaction extends Model
 {
     use HasFactory;
+    protected $table = 'redeeming_transactions';
+    protected $fillable = [
+        'member_id',
+        'points_redeemed',
+        'transaction_datetime',
+        'created_by'
+    
+    ];
 
     public function users(){
         return $this->belongsTo(User::class);

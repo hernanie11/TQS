@@ -118,7 +118,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('member_id');
             $table->double('points_redeemed', 8, 2);
-            $table->date('transaction_datetime');
+            $table->dateTime('transaction_datetime');
             $table->unsignedInteger('created_by')->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));

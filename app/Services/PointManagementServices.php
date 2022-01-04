@@ -63,7 +63,7 @@ class PointManagementServices{
 
         if(EarnedPoint::where('member_id', $member_id)->where('transaction_datetime', $transaction_datetime)->where('points_earn', $points_earn)->exists()){
             if(EarnedPoint::where('transaction_no', $transaction_no)->exists()){
-                $exist = "Transaction_no Already Exists";
+                $exist = EarnedPoint::select('transaction_no')->where('transaction_no', $transaction_no)->first();
             }
             else{
                 $exist = EarnedPoint::select('member_id', 'transaction_datetime')->where('member_id', $member_id)

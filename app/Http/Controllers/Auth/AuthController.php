@@ -53,7 +53,7 @@ class AuthController extends Controller
     if($role == "admin"){
 
         foreach($access_permission as $access){
-            if(($access != "members") and($access != "user-accounts") and ($access != "stores") and ($access != "earned-points") and ($access != "redeemed_points") and ($access != "generate_file")){
+            if(($access != "members") and($access != "user-accounts") and ($access != "stores") and ($access != "earned-points") and ($access != "redeemed-points") and ($access != "generate-file")){
                 return response([
                     'error_message' => 'No such '.$access .' value'], 200);
             }
@@ -76,7 +76,7 @@ class AuthController extends Controller
 
           foreach($access_permission as $access){
 
-            if(($access != "earning") and($access != "redeeming") and ($access != "members") and ($access != "transactions") and ($access != "generate_file")){
+            if(($access != "earning") and($access != "redeeming") and ($access != "members") and ($access != "transactions") and ($access != "generate-file")){
                 return response([
                     'error_message' => 'No such '.$access .' value'], 200);
             }

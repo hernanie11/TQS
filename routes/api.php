@@ -8,6 +8,7 @@ use App\Http\Controllers\StoreManagementController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MemberManagementController;
 use App\Http\Controllers\PointManagementController;
+use App\Http\Controllers\RedeemManagementController;
 use App\Http\Controllers\Auth\AuthController;
 
 /*
@@ -78,6 +79,11 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
         Route::post('/test/points', [PointManagementController::class, 'Create']); //test only
 
+        //RedeemPoints Management
+        Route::post('/redeem-request', [RedeemManagementController::class, 'Create']);
+        Route::post('/redeem/check', [RedeemManagementController::class, 'Check']);
+        Route::post('/redeem/import', [RedeemManagementController::class, 'Import']);
+
         Route::post('/logout', [AuthController::class, 'logout']);
    });
 
@@ -110,23 +116,6 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Route::post('test', [TestController::class, 'Test']);
-Route::post('test2', [TestController::class, 'Test2']);
-Route::post('test3', [TestController::class, 'Test3']);
 
 Route::post('createaccount', [AccountManagementController::class, 'Create']);
 Route::post('business_category', [StoreManagementController::class, 'CreateBusiness']);
