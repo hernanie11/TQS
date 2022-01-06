@@ -56,7 +56,7 @@ class User extends Authenticatable
         return $this->hasMany(Member::class);
     }
 
-    public function points(){
+    public function earnedpoints(){
         return $this->hasMany(EarnedPoint::class);
     }
 
@@ -71,4 +71,8 @@ class User extends Authenticatable
     public function redeeming_transactions(){
         return $this->hasMany(Redeeming_Transaction::class);
     }
+
+    
+
+    
 }

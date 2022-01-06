@@ -15,7 +15,7 @@ class Member extends Model
         
     ];
 
-    public function points(){
+    public function earnedpoints(){
         return $this->hasMany(EarnedPoint::class);
     }
 

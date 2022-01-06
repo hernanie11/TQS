@@ -4,9 +4,12 @@ namespace App\Services;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\EarnedPoint;
+use App\Models\ClearedPoint;
+use App\Models\Redeeming_Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminte\Support\Facades\Auth;
+
 
 
 class PointManagementServices{
@@ -84,6 +87,30 @@ class PointManagementServices{
 
             array_push($inserted_earnedpoints, $earnpoints);
             array_push($error);
+
+            /////adddddd//////Modified 05/01/2022//////////////
+            $clearedpoint = ClearedPoint::where('member_id', $member_id);
+           
+            if($clearedpoint->exists()){
+                $update_cleared_points = ClearedPoint::where('member_id', $member_id)->update([
+                    'total_cleared_points' => DB::raw('total_cleared_points + ' . $points_earn)
+                ]);
+            }
+            else{
+               $create_cleared_points = ClearedPoint::create([
+                   'member_id' => $member_id,
+                   'total_cleared_points' => $points_earn
+               ]);
+            }
+
+
+
+
+
+
+            ///////////////////
+
+
         }
 
        }

@@ -132,6 +132,18 @@ class CreateUsersTable extends Migration
             ->onDelete('set null'); 
         });
 
+        Schema::create('clearedpoints', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('member_id');
+            $table->double('total_cleared_points', 8, 2);
+            $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+            $table->foreign('member_id')
+            ->references('id')
+            ->on('members')
+            ->onDelete('cascade');
+        });
+
        
 
 
