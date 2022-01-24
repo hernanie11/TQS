@@ -183,13 +183,7 @@ class MemberManagementServices
 
             if(Member::where('mobile_number', $mobile_no )->exists()){
                 $exist = Member::select('mobile_number')->where('mobile_number', $mobile_no)->first();
-                // $response = [
-                //     'isMemberExist' => true
-                // ];
-
-               // $x = $exist, $response;
-                // $exist->id;
-                
+               
     
                 array_push($error, $exist);
               
@@ -212,7 +206,7 @@ class MemberManagementServices
             
                 array_push($inserted_members, $mobileno);
                 array_push($error);
-             // array_push($error,$exist);
+            
             
             }
         }
@@ -228,7 +222,7 @@ class MemberManagementServices
         ], 200
         );
 
-        //   return response(['memberExists' => $error]);            
+                
     }
 
     

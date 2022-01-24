@@ -9,7 +9,7 @@ class EarnedPoint extends Model
 {
     use HasFactory;
     protected $table = 'earnedpoints';
-    protected $fillable = ['member_id', 'transaction_no', 'amount', 'points_earn', 'transaction_datetime', 'created_by'];
+    protected $fillable = ['member_id', 'transaction_no', 'amount', 'points_earn', 'transaction_datetime', 'created_by', 'category', 'is_cleared', 'cleared_datetime'];
 
     public function members(){
         return $this->belongsTo(Member::class);

@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Services\PointManagementServices;
 use App\Http\Requests\EarnedPointRequest;
+use App\Http\Requests\ClearedPointRequest;
 
 class PointManagementController extends Controller
 {
@@ -61,5 +62,16 @@ class PointManagementController extends Controller
         $pointsperpage = $request->pointsperpage;
         $search_details = PointManagementServices::Search_Earned_Points($searchvalue, $pointsperpage);
         return $search_details;
+    }
+
+    public function ClearPoints(ClearedPointRequest $request){
+    
+        $all = $request->all();
+       // $ids = implode(",", $id);
+        // $member_id = $request->member_id;
+        // $transaction_datetime = $request->transaction_datetime;
+        // $points_earn = $request->points_earn;
+        $cleared = PointManagementServices::Clear_Points($all);
+        return $cleared;
     }
 }

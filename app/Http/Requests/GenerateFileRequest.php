@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class GenerateFileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,20 +24,9 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => 'required',
-            'name' => 'required',
-            'area' => 'required',
-            'region' => 'required',
-            'cluster' => 'required',
-            'business_model' => 'required|in:FOX,FO'
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'business_model.in' => 'Business Category must be FO or FOX!',
-
+            'user_account' => 'required|boolean',
+            'member' => 'required|boolean',
+            'store' => 'required|boolean'
         ];
     }
 }

@@ -13,6 +13,8 @@ class Redeeming_Transaction extends Model
         'member_id',
         'points_redeemed',
         'transaction_datetime',
+        'store_code',
+        'store_name',
         'created_by'
     
     ];

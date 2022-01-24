@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class ClearedPointRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,20 +24,22 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => 'required',
-            'name' => 'required',
-            'area' => 'required',
-            'region' => 'required',
-            'cluster' => 'required',
-            'business_model' => 'required|in:FOX,FO'
+         
+            '*.id' => 'required|numeric|exists:earnedpoints,id',
+            '*.member_id' => 'required|numeric|exists:earnedpoints,member_id',
+            '*.amount' => 'required',
+            '*.points_earn' => 'required'
+            
         ];
     }
 
-    public function messages()
-    {
+    public function messages(){
         return [
-            'business_model.in' => 'Business Category must be FO or FOX!',
-
+          
+        '*.id.exists' => 'id is not exist',     
+        '*.member_id.exists' => 'member_id is not exist'
         ];
     }
+
+   
 }

@@ -69,6 +69,9 @@ class CreateUsersTable extends Migration
             $table->double('points_earn', 8, 2);
             $table->dateTime('transaction_datetime');
             $table->unsignedInteger('created_by')->nullable();
+            $table->string('category');
+            $table->boolean('is_cleared');
+            $table->dateTime('cleared_datetime')->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
             $table->foreign('member_id')
@@ -119,6 +122,8 @@ class CreateUsersTable extends Migration
             $table->unsignedInteger('member_id');
             $table->double('points_redeemed', 8, 2);
             $table->dateTime('transaction_datetime');
+            $table->string('store_code');
+            $table->string('store_name');
             $table->unsignedInteger('created_by')->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));

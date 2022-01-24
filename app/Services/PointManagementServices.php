@@ -9,6 +9,7 @@ use App\Models\Redeeming_Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminte\Support\Facades\Auth;
+use Carbon\Carbon;
 
 
 
@@ -27,10 +28,13 @@ class PointManagementServices{
     }
 
     public static function List_Points_Transaction($pointsperpage){
-        $list = EarnedPoint::select('earnedpoints.id','members.first_name', 'members.last_name', 'members.mobile_number','earnedpoints.transaction_no', 'earnedpoints.amount', 'earnedpoints.points_earn', 'earnedpoints.transaction_datetime')
+        $list = EarnedPoint::select('earnedpoints.id', 'earnedpoints.member_id', 'members.first_name', 'members.last_name', 'members.mobile_number','earnedpoints.transaction_no', 'earnedpoints.amount', 'earnedpoints.points_earn', 'earnedpoints.transaction_datetime', 'earnedpoints.category')
          ->leftJoin('members', function($join){
              $join->on('earnedpoints.member_id', 'members.id');
-         })->orderBy('earnedpoints.created_at', 'DESC')->paginate($pointsperpage);
+         })->where('earnedpoints.is_cleared', false)->orderBy('earnedpoints.created_at', 'DESC')->paginate($pointsperpage);
+         $mytime = Carbon\Carbon::now();
+         echo $mytime->toDateTimeString();
+
          return $list;
     } 
 
@@ -46,7 +50,9 @@ class PointManagementServices{
                 'points_earn' => $points_earn,
                 'transaction_datetime' => $transaction_datetime,
                 'created_by' => $created_by
+            
             ]);
+            
             return $earnpoints;
         }
 
@@ -63,8 +69,10 @@ class PointManagementServices{
         $amount = $allpoints['amount'];
         $points_earn = $allpoints['points_earn'];
         $transaction_datetime = $allpoints['transaction_datetime'];
+        $category =  $allpoints['category'];
 
-        if(EarnedPoint::where('member_id', $member_id)->where('transaction_datetime', $transaction_datetime)->where('points_earn', $points_earn)->exists()){
+        if((EarnedPoint::where('member_id', $member_id)->where('transaction_datetime', $transaction_datetime)->where('points_earn', $points_earn)->exists())
+         || EarnedPoint::where('transaction_no', $transaction_no)->exists()){
             if(EarnedPoint::where('transaction_no', $transaction_no)->exists()){
                 $exist = EarnedPoint::select('transaction_no')->where('transaction_no', $transaction_no)->first();
             }
@@ -82,30 +90,28 @@ class PointManagementServices{
                 'amount' => $amount,
                 'points_earn' => $points_earn,
                 'transaction_datetime' => $transaction_datetime,
-                'created_by' => $created_by
+                'created_by' => $created_by, 
+                'category' => $category,
+                'is_cleared' => false
             ]);
 
             array_push($inserted_earnedpoints, $earnpoints);
             array_push($error);
 
             /////adddddd//////Modified 05/01/2022//////////////
-            $clearedpoint = ClearedPoint::where('member_id', $member_id);
+            // $clearedpoint = ClearedPoint::where('member_id', $member_id);
            
-            if($clearedpoint->exists()){
-                $update_cleared_points = ClearedPoint::where('member_id', $member_id)->update([
-                    'total_cleared_points' => DB::raw('total_cleared_points + ' . $points_earn)
-                ]);
-            }
-            else{
-               $create_cleared_points = ClearedPoint::create([
-                   'member_id' => $member_id,
-                   'total_cleared_points' => $points_earn
-               ]);
-            }
-
-
-
-
+            // if($clearedpoint->exists()){
+            //     $update_cleared_points = ClearedPoint::where('member_id', $member_id)->update([
+            //         'total_cleared_points' => DB::raw('total_cleared_points + ' . $points_earn)
+            //     ]);
+            // }
+            // else{
+            //    $create_cleared_points = ClearedPoint::create([
+            //        'member_id' => $member_id,
+            //        'total_cleared_points' => $points_earn
+            //    ]);
+            // }
 
 
             ///////////////////
@@ -191,6 +197,58 @@ class PointManagementServices{
         ->orderBy('earnedpoints.transaction_datetime', 'DESC')->paginate($pointsperpage);;
         return $search;
 
+     }
+
+
+     public static function Clear_Points($all){
+        $data = array();
+        
+        // $test = EarnedPoint::select('member_id', 'points_earn')->where('id', 3)->first();
+        // echo  $test->member_id;
+
+       foreach($all as $allpoints){
+
+        $member_id = $allpoints['member_id'];
+        $id = $allpoints['id'];
+        $amount = $allpoints['amount'];
+        $points_earn = $allpoints['points_earn'];
+        $check = EarnedPoint::where('id', $id)->where('member_id', $member_id)->where('amount', $amount)
+        ->where('points_earn', $points_earn);
+            if($check->exists()){
+                
+                $updatetransaction = EarnedPoint::select('member_id', 'points_earn')
+                ->where('id', $id)
+                ->where('member_id', $member_id)
+                ->where('amount', $amount)
+                ->where('points_earn', $points_earn)
+                ->where('is_cleared', false)
+                ->update([
+                    'is_cleared' => true,
+                    'cleared_datetime' => DB::raw('updated_at')
+                ]);
+                if( $updatetransaction == 1){
+                    $clearedpoint = ClearedPoint::where('member_id', $member_id);
+                        
+                    if($clearedpoint->exists()){
+                        $update_cleared_points = ClearedPoint::where('member_id', $member_id)->update([
+                            'total_cleared_points' => DB::raw('total_cleared_points + ' . $points_earn)
+                        ]);
+                    }
+                    else{
+                    $create_cleared_points = ClearedPoint::create([
+                        'member_id' => $member_id,
+                        'total_cleared_points' => $points_earn
+                    ]);
+                    }
+                }
+              
+           } 
+
+         
+
+       }
+      // return $data;
+       
      }
     
 

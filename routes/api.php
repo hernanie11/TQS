@@ -10,6 +10,8 @@ use App\Http\Controllers\MemberManagementController;
 use App\Http\Controllers\PointManagementController;
 use App\Http\Controllers\RedeemManagementController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\GenerateFileManagementController;
+use App\Http\Controllers\ReportManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,12 +81,21 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
         Route::post('/test/points', [PointManagementController::class, 'Create']); //test only
 
+        Route::put('/points/cleared-points', [PointManagementController::class, 'ClearPoints']);
+
         //RedeemPoints Management
         Route::post('/redeem-request', [RedeemManagementController::class, 'Create']);
         Route::post('/redeem/check', [RedeemManagementController::class, 'Check']);
         Route::post('/redeem/import', [RedeemManagementController::class, 'Import']);
         Route::get('/redeem/{redeemsperpage}', [RedeemManagementController::class, 'List']);
+        Route::post('/search-redeem/{redeemsperpage}', [RedeemManagementController::class, 'Search']);
 
+        //GEnerate file
+        Route::post('/generate/generatefile', [GenerateFileManagementController::class, 'Gen']);
+
+        //Report 
+        Route::post('/report', [ReportManagementController::class, 'GenerateReport']);
+        
 
         Route::post('/logout', [AuthController::class, 'logout']);
    });
