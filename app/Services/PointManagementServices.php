@@ -32,9 +32,8 @@ class PointManagementServices{
          ->leftJoin('members', function($join){
              $join->on('earnedpoints.member_id', 'members.id');
          })->where('earnedpoints.is_cleared', false)->orderBy('earnedpoints.created_at', 'DESC')->paginate($pointsperpage);
-         $mytime = Carbon\Carbon::now();
-         echo $mytime->toDateTimeString();
-
+         
+         
          return $list;
     } 
 
@@ -208,10 +207,13 @@ class PointManagementServices{
 
        foreach($all as $allpoints){
 
+
         $member_id = $allpoints['member_id'];
         $id = $allpoints['id'];
         $amount = $allpoints['amount'];
         $points_earn = $allpoints['points_earn'];
+        $date = date('Y-m-d H:i:s');
+        //'cleared_datetime' => DB::raw('updated_at')
         $check = EarnedPoint::where('id', $id)->where('member_id', $member_id)->where('amount', $amount)
         ->where('points_earn', $points_earn);
             if($check->exists()){
@@ -224,7 +226,7 @@ class PointManagementServices{
                 ->where('is_cleared', false)
                 ->update([
                     'is_cleared' => true,
-                    'cleared_datetime' => DB::raw('updated_at')
+                    'cleared_datetime' => $date
                 ]);
                 if( $updatetransaction == 1){
                     $clearedpoint = ClearedPoint::where('member_id', $member_id);
@@ -233,22 +235,55 @@ class PointManagementServices{
                         $update_cleared_points = ClearedPoint::where('member_id', $member_id)->update([
                             'total_cleared_points' => DB::raw('total_cleared_points + ' . $points_earn)
                         ]);
+                        array_push($data, $update_cleared_points);
                     }
                     else{
                     $create_cleared_points = ClearedPoint::create([
                         'member_id' => $member_id,
                         'total_cleared_points' => $points_earn
                     ]);
+                    array_push($data, $create_cleared_points);
+
                     }
+
+                   
                 }
               
            } 
 
-         
+       }
+       if(empty($data)){
+           return response()->json(['error' => ['message' => "Already Cleared"]], 200);
+           
+       
+        }
+
+       else{
+        return response()->json(['code'=> '201', 'message' => 'Successfully Cleared!'], 201);
 
        }
       // return $data;
        
+     }
+
+     public static function List_Cleared_Points($clearedpointsperpage){
+        $list = ClearedPoint::select('clearedpoints.id','members.first_name', 'members.last_name', 'clearedpoints.total_cleared_points')
+        ->leftJoin('members', function($join){
+            $join->on('clearedpoints.member_id', 'members.id');
+        })->orderBy('clearedpoints.created_at', 'DESC')->paginate($clearedpointsperpage);
+        return $list; 
+     }
+
+     public static function Search_Cleared_Points($searchvalue, $clearedpointsperpage){
+        $search = ClearedPoint::select('clearedpoints.id','members.first_name', 'members.last_name', 'clearedpoints.total_cleared_points')
+        ->leftJoin('members', function($join){
+            $join->on('clearedpoints.member_id', 'members.id');
+        })
+        ->where('members.first_name', 'LIKE', "%{$searchvalue}%")
+        ->orWhere('members.last_name', 'LIKE', "%{$searchvalue}%")
+        ->orWhere('clearedpoints.total_cleared_points', 'LIKE', "%{$searchvalue}%")
+        ->orderBy('clearedpoints.created_at', 'DESC')->paginate($clearedpointsperpage);
+        return $search; 
      }
     
 

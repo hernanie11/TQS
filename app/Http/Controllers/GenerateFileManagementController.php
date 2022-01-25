@@ -13,7 +13,7 @@ use App\Http\Requests\GenerateFileRequest;
 
 class GenerateFileManagementController extends Controller
 {
-    public function Gen(GenerateFileRequest $request){
+    public function Generate(GenerateFileRequest $request){
         $user = $request->user_account;
         $member = $request->member;
         $store = $request->store;

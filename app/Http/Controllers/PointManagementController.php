@@ -66,12 +66,22 @@ class PointManagementController extends Controller
 
     public function ClearPoints(ClearedPointRequest $request){
     
-        $all = $request->all();
-       // $ids = implode(",", $id);
-        // $member_id = $request->member_id;
-        // $transaction_datetime = $request->transaction_datetime;
-        // $points_earn = $request->points_earn;
+        $all = $request->data;
         $cleared = PointManagementServices::Clear_Points($all);
         return $cleared;
+    }
+
+    public function ListClearedPoints(Request $request){
+        $clearedpointsperpage = $request->clearedpointsperpage;
+        $clearedpoints = PointManagementServices::List_Cleared_Points($clearedpointsperpage);
+        return $clearedpoints;
+
+    }
+
+    public function SearchClearedPoints(Request $request){
+        $clearedpointsperpage = $request->clearedpointsperpage;
+        $searchvalue = $request->searchvalue;
+        $searchclearedpoints = PointManagementServices::Search_Cleared_Points($searchvalue, $clearedpointsperpage);
+        return $searchclearedpoints;
     }
 }

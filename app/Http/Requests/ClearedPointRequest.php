@@ -22,22 +22,26 @@ class ClearedPointRequest extends FormRequest
      * @return array
      */
     public function rules()
+    
     {
+
+        //$all = $this->request->all();
         return [
-         
-            '*.id' => 'required|numeric|exists:earnedpoints,id',
-            '*.member_id' => 'required|numeric|exists:earnedpoints,member_id',
-            '*.amount' => 'required',
-            '*.points_earn' => 'required'
-            
+           
+
+            'data.*.id' => 'required|numeric|exists:earnedpoints,id',
+            'data.*.member_id' => 'required|numeric|exists:earnedpoints,member_id',
+            'data.*.amount' => 'required',
+            'data.*.points_earn' => 'required'
         ];
+    
     }
 
     public function messages(){
         return [
           
-        '*.id.exists' => 'id is not exist',     
-        '*.member_id.exists' => 'member_id is not exist'
+        'data.*.id.exists' => 'id is not exist',     
+        'data.*.member_id.exists' => 'member_id is not exist'
         ];
     }
 

@@ -81,7 +81,12 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
         Route::post('/test/points', [PointManagementController::class, 'Create']); //test only
 
+        //ClearedPoints
+        Route::get('/cleared-points/{clearedpointsperpage}', [PointManagementController::class, 'ListClearedPoints']);
+        Route::post('/search-cleared-points/{clearedpointsperpage}', [PointManagementController::class, 'SearchClearedPoints']);
         Route::put('/points/cleared-points', [PointManagementController::class, 'ClearPoints']);
+        
+        
 
         //RedeemPoints Management
         Route::post('/redeem-request', [RedeemManagementController::class, 'Create']);
@@ -91,7 +96,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::post('/search-redeem/{redeemsperpage}', [RedeemManagementController::class, 'Search']);
 
         //GEnerate file
-        Route::post('/generate/generatefile', [GenerateFileManagementController::class, 'Gen']);
+        Route::post('/generate/generatefile', [GenerateFileManagementController::class, 'Generate']);
 
         //Report 
         Route::post('/report', [ReportManagementController::class, 'GenerateReport']);

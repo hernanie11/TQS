@@ -216,7 +216,7 @@ class RedeemManagementServices{
     }
 
     public static function List_Redeeming_Transactions($redeemsperpage){
-        $list = Redeeming_Transaction::select('redeeming_transactions.id', 'members.first_name', 'members.last_name', 'members.mobile_number', 'redeeming_transactions.points_redeemed', 'redeeming_transactions.transaction_datetime')
+        $list = Redeeming_Transaction::select('redeeming_transactions.id', 'members.first_name', 'members.last_name', 'members.mobile_number', 'redeeming_transactions.store_name', 'redeeming_transactions.points_redeemed', 'redeeming_transactions.transaction_datetime')
         ->leftJoin('members', function($join){
             $join->on('redeeming_transactions.member_id', 'members.id');
          })->orderBy('redeeming_transactions.created_at', 'DESC')->paginate($redeemsperpage);
