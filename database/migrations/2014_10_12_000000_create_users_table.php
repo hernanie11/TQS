@@ -63,6 +63,7 @@ class CreateUsersTable extends Migration
 
         Schema::create('earnedpoints', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('store_id');
             $table->unsignedInteger('member_id');
             $table->string('transaction_no');
             $table->double('amount', 8, 2);
@@ -81,7 +82,7 @@ class CreateUsersTable extends Migration
             $table->foreign('created_by')
             ->references('id')
             ->on('users')
-            ->onDelete('set null');   
+            ->onDelete('set null');  
         });
 
         Schema::create('earnings', function (Blueprint $table) {

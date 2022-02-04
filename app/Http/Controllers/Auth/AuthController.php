@@ -15,6 +15,7 @@ use App\Http\Requests\AuthRequest;
 use App\Http\Requests\RegistrationRequest;
 
 
+
 class AuthController extends Controller
 {
     public function CreateAccount(RegistrationRequest $request){
@@ -48,8 +49,6 @@ class AuthController extends Controller
     //         'error_message' => $role . ' is not a value'], 200);
     // }
    
-
-
     if($role == "admin"){
 
         foreach($access_permission as $access){
@@ -70,7 +69,6 @@ class AuthController extends Controller
           
         }
     }
-
 
       if($role == "cashier"){
 
@@ -103,8 +101,6 @@ class AuthController extends Controller
           }
       }
        
-
-
       
         if(User::where('username', $username)->exists()){
             $response = [
@@ -153,13 +149,7 @@ class AuthController extends Controller
                 'isAuthenticated' => false
             ], 200);
         } 
-      //  $userid = $user->id;
-    //    $account = Account_Role::where('user_id', $userid)->first();
-     //   $role = $account->role;
-   //     $access = $account->access_permission;
-
         $token = $user->createToken('myapptoken')->plainTextToken;
-
         $response = [
             'user' => $user,
             'token' => $token
@@ -173,8 +163,9 @@ class AuthController extends Controller
      
     }
 
-    public function logout(Request $request){
-        auth('sanctum')->user()->tokens()->delete();
+    public function logout(Request $request){  
+     //   auth('sanctum')->user()->tokens()->delete();//logout all tokens by user_id
+        auth('sanctum')->user()->currentAccessToken()->delete();//logout currentAccessToken
         return response()->json(['message' => 'You are Successfully Logged Out!']);
     }
 

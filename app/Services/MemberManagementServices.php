@@ -150,7 +150,6 @@ class MemberManagementServices
     public static function Check_Members($all){
        $error = array();
        $data = array();
-//$inserted_members = array();
        foreach($all as $mobileno){
             $mobile_no = $mobileno['mobile_number'];
             if(Member::where('mobile_number', $mobile_no )->exists()){
@@ -224,6 +223,61 @@ class MemberManagementServices
 
                 
     }
+
+
+    public static function Test_Import_Member_V2($all, $created_by){
+
+        $count = 0;
+        $error = array();
+        $data = array();
+        $inserted_members = array();
+
+        foreach($all as $mobileno){
+            $mobile_no = $mobileno['mobile_number'];
+            $first_name = $mobileno['first_name'];
+            $last_name = $mobileno['last_name'];
+            $gender = $mobileno['gender'];
+            $birthday = $mobileno['birthday'];
+            $barangay = $mobileno['barangay'];
+            $municipality = $mobileno['municipality'];
+            $province = $mobileno['province'];
+            $email = $mobileno['email'];
+            $is_active = $mobileno['is_active'];
+
+            $member =  Member::create([
+                'first_name' => $first_name,
+                'last_name' => $last_name,
+                'gender' => $gender,
+                'birthday' => $birthday,
+                'barangay' => $barangay,
+                'municipality' => $municipality,
+                'province' => $province,
+                'email' => $email,
+                'mobile_number' => $mobile_no,
+                'is_active' => $is_active,
+                'created_by' => $created_by
+            ]);
+            array_push($inserted_members, $member);
+        }
+
+
+        return response()->json(['code'=> '201','message' => 'Members are Succesfully Imported', 'data' => $inserted_members], 201);
+
+                
+    }
+
+    public static function Test_Check_Members_V2($all){
+        $error = array();
+        $data = array();
+        foreach($all as $mobileno){
+             $mobile_no = $mobileno['mobile_number'];
+             if(Member::where('mobile_number', $mobile_no )->exists()){
+                 $exist = Member::select('mobile_number')->where('mobile_number', $mobile_no)->first();
+                 array_push($error, $exist);
+             }
+       }
+       return response()->json(['message'=>'The given data was invalid.','errors' => ['memberExists' => $error]]);
+     }
 
     
 }

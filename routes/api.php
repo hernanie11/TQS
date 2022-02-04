@@ -12,6 +12,7 @@ use App\Http\Controllers\RedeemManagementController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\GenerateFileManagementController;
 use App\Http\Controllers\ReportManagementController;
+use App\Http\Controllers\Settings\SettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,7 +101,19 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
         //Report 
         Route::post('/report', [ReportManagementController::class, 'GenerateReport']);
+        Route::post('/generate_soa/{id}', [ReportManagementController::class, 'GenerateSOA']);
         
+        //settings
+        Route::put('/setting', [SettingsController::class, 'set_earned_points_percentage']);
+        Route::get('/get-setting', [SettingsController::class, 'Get_Settings']);
+
+        //test
+        Route::post('/member/test-import-members', [MemberManagementController::class, 'TestImportMember']);
+        Route::post('/member/test-check-members', [MemberManagementController::class, 'TestCheckMember']);
+        Route::post('/points/test-import', [PointManagementController::class, 'TestImportEarnedPoints']);//import
+
+
+
 
         Route::post('/logout', [AuthController::class, 'logout']);
    });

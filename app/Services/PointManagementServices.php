@@ -18,7 +18,8 @@ class PointManagementServices{
          $list = EarnedPoint::select('earnedpoints.member_id', 'earnedpoints.points_earn', 'earnedpoints.transaction_datetime', 'members.first_name', 'members.last_name', 'members.mobile_number')
          ->leftJoin('members', function($join){
              $join->on('earnedpoints.member_id', 'members.id');
-         })->where('earnedpoints.member_id', $member_id)->orderBy('earnedpoints.transaction_datetime', 'DESC')->paginate(5);;
+         })->where('earnedpoints.member_id', $member_id)->orderBy('earnedpoints.transaction_datetime', 'DESC')->paginate(5);
+
          return $list;
     } 
 
@@ -28,12 +29,10 @@ class PointManagementServices{
     }
 
     public static function List_Points_Transaction($pointsperpage){
-        $list = EarnedPoint::select('earnedpoints.id', 'earnedpoints.member_id', 'members.first_name', 'members.last_name', 'members.mobile_number','earnedpoints.transaction_no', 'earnedpoints.amount', 'earnedpoints.points_earn', 'earnedpoints.transaction_datetime', 'earnedpoints.category')
+        $list = EarnedPoint::select('earnedpoints.id','earnedpoints.member_id', 'members.first_name', 'members.last_name', 'members.mobile_number','earnedpoints.transaction_no', 'earnedpoints.amount', 'earnedpoints.points_earn', 'earnedpoints.transaction_datetime', 'earnedpoints.category')
          ->leftJoin('members', function($join){
              $join->on('earnedpoints.member_id', 'members.id');
          })->where('earnedpoints.is_cleared', false)->orderBy('earnedpoints.created_at', 'DESC')->paginate($pointsperpage);
-         
-         
          return $list;
     } 
 
@@ -284,6 +283,49 @@ class PointManagementServices{
         ->orWhere('clearedpoints.total_cleared_points', 'LIKE', "%{$searchvalue}%")
         ->orderBy('clearedpoints.created_at', 'DESC')->paginate($clearedpointsperpage);
         return $search; 
+     }
+
+
+
+     public static function Test_Import_Earned_Points($all, $created_by){
+        $error = array();
+        $data = array();
+        $inserted_earnedpoints = array();
+        $i = 0;
+        $index = array();
+        $label = array();
+ 
+       foreach($all as $allpoints){
+        $member_id = $allpoints['member_id'];
+        $transaction_no = $allpoints['transaction_no'];
+        $amount = $allpoints['amount'];
+        $points_earn = $allpoints['points_earn'];
+        $transaction_datetime = $allpoints['transaction_datetime'];
+        $category =  $allpoints['category'];
+        $store_code = $allpoints['store_code'];
+
+        
+        $earnpoints = EarnedPoint::create([
+            'member_id' => $member_id,
+            'transaction_no' => $transaction_no,
+            'amount' => $amount,
+            'points_earn' => $points_earn,
+            'transaction_datetime' => $transaction_datetime,
+            'created_by' => $created_by, 
+            'category' => $category,
+            'store_id' => $store_code,
+            'is_cleared' => false
+        ]);
+
+        array_push($inserted_earnedpoints, $earnpoints);
+       }
+
+       return response()->json([
+           'code'=>201, 
+           'message'=>'Successfully Imported'
+        ],201);
+
+
      }
     
 

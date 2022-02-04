@@ -9,7 +9,12 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Services\PointManagementServices;
 use App\Http\Requests\EarnedPointRequest;
+use App\Http\Requests\EarnedPointRequestV2;
 use App\Http\Requests\ClearedPointRequest;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule; 
+
+
 
 class PointManagementController extends Controller
 {
@@ -83,5 +88,12 @@ class PointManagementController extends Controller
         $searchvalue = $request->searchvalue;
         $searchclearedpoints = PointManagementServices::Search_Cleared_Points($searchvalue, $clearedpointsperpage);
         return $searchclearedpoints;
+    }
+
+    public function TestImportEarnedPoints(EarnedPointRequestV2 $request){
+         $all = $request->data;
+         $created_by = auth('sanctum')->user()->id;
+        $import = PointManagementServices::Test_Import_Earned_Points($all, $created_by);
+       return $import; 
     }
 }

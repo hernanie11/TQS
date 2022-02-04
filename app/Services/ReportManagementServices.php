@@ -5,16 +5,24 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Redeeming_Transaction;
 use App\Models\EarnedPoint;
 use App\Models\ClearedPoint;
+use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminte\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ReportManagementServices{
 
     public static function Report($selectedReport, $dateRangedBased, $dateRanged, $category, $status){
 
         foreach($dateRanged as $date) {
-            $start_date = $date['start'];
-            $end_date = $date['end'];    
+            // $start_date_test = $date['start'];
+            // $end_date_test = $date['end'];  
+            
+            // $start_date = Carbon::parse($start_date_test)->startOfDay();
+            // $$start_date = Carbon::parse($start_date_test)->startOfDay();
+
+            $start_date = Carbon::parse($date['start'])->startOfDay();
+            $end_date = Carbon::parse($date['end'])->endOfDay();
         }
         if($selectedReport == 'Earned-Points'){
             if(($dateRangedBased == "Date Synched / Upload")){
@@ -24,9 +32,7 @@ class ReportManagementServices{
                         $join->on('earnedpoints.member_id', 'members.id');
                     })->whereBetween('earnedpoints.created_at', [$start_date, $end_date])->get();
                     return $report;
-
                 }
-
 
                 if(!empty($category) and empty($status)){ 
                     if(!empty($category[1])){
@@ -576,16 +582,54 @@ class ReportManagementServices{
             return $report; 
         }
 
+    }
+
+    public static function Generate_SOA($member_id,$dateStart, $dateEnd){
+        $customData = array();
+        $response = [];
+        $earnedPoints = EarnedPoint::where('member_id', $member_id)->whereBetween('cleared_datetime', [$dateStart, $dateEnd])->get();
+        foreach($earnedPoints as $earnedPoint) {
+            $field['date'] = $earnedPoint['cleared_datetime'];
+            $field['cleared_point'] = $earnedPoint['points_earn'];
+            $field['redeemed_point'] = null;
+            $field['total'] = 0;
+            array_push($customData, $field);
+        }
+
+
+        // RedeemedPoints
+        $redeemededPoints = Redeeming_Transaction::where('member_id', $member_id)->whereBetween('transaction_datetime', [$dateStart, $dateEnd])->get();
+        foreach($redeemededPoints as $redeemedPoint) {
+            $field['date'] = $redeemedPoint['transaction_datetime'];
+            $field['cleared_point'] = null;
+            $field['redeemed_point'] = $redeemedPoint['points_redeemed'];
+            $field['total'] = 0;
+            array_push($customData, $field);
+        }
+
+        $response['soa'] = $customData;
+        $response['statusCode'] = 200;
+        $total = 0;
+
+        foreach($customData as $data => $value) {
+            $sum = $customData[$data]['cleared_point'] + $total;
+            // $customData[$data]['cleared_point']
+            $customData[$data]['total'] = $sum;
+
+            $total = $sum;
+
+            if ($customData[$data]['redeemed_point']) {
+                $total = $total - $customData[$data]['redeemed_point'];
+                $customData[$data]['total'] = $total;
+            }
+        }
+
+        return $customData;
+
+        return $soa;
         
-
-     
         
         
-         
-
-
-
-
     }
 
 }

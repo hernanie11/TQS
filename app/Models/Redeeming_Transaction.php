@@ -18,6 +18,11 @@ class Redeeming_Transaction extends Model
         'created_by'
     
     ];
+    protected $casts = [
+        'points_redeemed'=>'decimal:2',
+       
+      
+    ];
 
     public function users(){
         return $this->belongsTo(User::class);

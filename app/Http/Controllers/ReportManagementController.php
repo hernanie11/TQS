@@ -11,6 +11,7 @@ use Illuminte\Support\Facades\Auth;
 use App\Services\ReportManagementServices;
 use App\Http\Requests\GenerateFileRequest;
 use App\Http\Requests\ReportRequest;
+use Carbon\Carbon;
 
 class ReportManagementController extends Controller
 {
@@ -23,5 +24,16 @@ class ReportManagementController extends Controller
         $genreport = ReportManagementServices::Report($selectedReport, $dateRangedBased, $dateRanged, $category, $status);
         return $genreport;
 
+    }
+
+    public function GenerateSOA(Request $request){
+//$id = auth('sanctum')->user();
+        // $dateStart = $request->dateStart;
+        // $dateEnd = $request->dateEnd;
+        $member_id = $request->id;
+        $dateStart = Carbon::parse($request->dateStart)->startOfDay();
+        $dateEnd = Carbon::parse($request->dateEnd)->endOfDay();
+        $gensoa = ReportManagementServices::Generate_SOA($member_id,$dateStart, $dateEnd);
+        return $gensoa;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MemberRequest;
 use App\Http\Requests\MemberImportRequest;
+use App\Http\Requests\MemberImportRequestV2;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -112,8 +113,19 @@ class MemberManagementController extends Controller
         $all = $request->all();
         $check =  MemberManagementServices::Check_Members($all);
         return $check;
-        
+    }
 
+    public function TestImportMember(MemberImportRequestV2 $request){
+        $all = $request->data;
+        $created_by = auth('sanctum')->user()->id;
+        $upload =  MemberManagementServices::Test_Import_Member_V2($all, $created_by);
+        return $upload;
+    }
+
+    public function TestCheckMember(Request $request){
+        $all = $request->data;
+        $check =  MemberManagementServices::Test_Check_Members_V2($all);
+        return $check;
     }
 
     

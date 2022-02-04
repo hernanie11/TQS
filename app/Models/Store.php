@@ -33,6 +33,8 @@ class Store extends Model
         return $this->belongsTo(Business_Category::class);
     }
 
+  
+
 
     
 }
