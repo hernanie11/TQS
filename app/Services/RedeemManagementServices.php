@@ -14,20 +14,21 @@ use Illuminte\Support\Facades\Auth;
 
 class RedeemManagementServices{
     public static function CreateTransaction($member_id, $points_redeemed, $transaction_datetime, $store_code, $store_name, $created_by){
-        $sum_earnedpoints = EarnedPoint::where('member_id', $member_id)->sum('points_earn');
-        $sum_redeemedpoints = Redeeming_Transaction::where('member_id', $member_id)->sum('points_redeemed');
-        $points = $sum_earnedpoints - $sum_redeemedpoints;
+       // $sum_earnedpoints = ClearedPoint::where('member_id', $member_id)->sum('total_cleared_points');
+       // $sum_redeemedpoints = Redeeming_Transaction::where('member_id', $member_id)->sum('points_redeemed');
+       // $points = $sum_earnedpoints - $sum_redeemedpoints;
         $check = Redeeming_Transaction::where('member_id', $member_id)->where('points_redeemed', $points_redeemed)->where('transaction_datetime', $transaction_datetime);
-
+        $total_cleared_points = ClearedPoint::select('total_cleared_points')->where('member_id', $member_id)->sum('total_cleared_points');
         if($check->exists()){
             $exist = $check->select('member_id', 'points_redeemed', 'transaction_datetime')->first();
-            return response(['error' => ['message' =>'Redeemed Transaction already Exists!!', 'Redeemed_Transaction_Exists' => [$exist] ]], 200);
+           // return response(['message'=> 'Unable to redeem, Not enough points','error' => ['message' =>'Redeemed Transaction already Exists!!', 'Redeemed_Transaction_Exists' => [$exist] ]], 200);
+           return response()->json(['message'=> 'The given data was invalid.', 'error'=> ['data'=>['The data has already been taken.']]], 422);
+
         }
         else {
-            
-            if($points <= $points_redeemed){
+            if($total_cleared_points <= $points_redeemed){
                 
-                return response(['error'=> ['message' => 'Unable to redeem, Not Enough Points!!', '*current_points'=>$points]], 200);
+                return response()->json(['message'=> 'Unable to redeem, Not enough points', 'error'=> ['*current_points'=>$total_cleared_points]], 422);
             }
             else{
                 $redeempoints = Redeeming_Transaction::create([
@@ -38,8 +39,13 @@ class RedeemManagementServices{
                     'store_name' => $store_name,
                     'created_by' => $created_by
                 ]);
-               // return $redeempoints;
-                return response(['message' => "Successfully Imported", 'Imported_Redeemed_Points' => [$redeempoints]], 200);
+                //tees
+                $clearedpoint = ClearedPoint::where('member_id', $member_id);
+                $update_cleared_points = ClearedPoint::where('member_id', $member_id)->update([
+                    'total_cleared_points' => DB::raw('total_cleared_points - ' .$points_redeemed)
+                ]);
+                ////
+                return response(['code' => '201','message' => "Successfully Redeemed"], 201);
             }
             
         }
@@ -96,7 +102,6 @@ class RedeemManagementServices{
             $store_name = $allredeemed['store_name'];
             $check = Redeeming_Transaction::where('member_id', $member_id)->where('transaction_datetime', $transaction_datetime)->where('points_redeemed', $points_redeemed);
             $total_cleared_points = ClearedPoint::select('total_cleared_points')->where('member_id', $member_id)->sum('total_cleared_points');
-          //  $check_member_id = Member::where('id', $member_id);
             $check_member_id = ClearedPoint::select('total_cleared_points')->where('member_id', $member_id);
              
             if($check->exists() || $total_cleared_points < $points_redeemed){

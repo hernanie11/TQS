@@ -39,6 +39,10 @@ class MemberImportRequestV2 extends FormRequest
             'data.*.email' => 'required|email',
             
         ];
+
+        // return [
+        //     'data.*.mobile_number' => 'required|regex:[09]|numeric|digits:11|unique:members,mobile_number',
+        // ];
     }
 
     public function messages()
@@ -48,7 +52,8 @@ class MemberImportRequestV2 extends FormRequest
         'data.*.mobile_number.regex' => 'Contact No. must start with 09!!',
         'data.*.gender.in' => 'Gender must be Male and Female only!!',
         'data.*.mobile_number.unique' => ':attribute is already exist!',
-       // 'data.*.mobile_number.unique' => ['data.*.mobile_number.unique' =>':attribute :input is already exist!']
+    //    'data.*.mobile_number.unique' => ['data.*.mobile_number.unique' =>':attribute :input is already exist!']
+        'data.*.mobile_number.unique' => ':input'
         
     ];
    
@@ -63,8 +68,8 @@ class MemberImportRequestV2 extends FormRequest
     //      //  $test = $validator->errors()->array_fill_keys();
            
     //          $response = response()->json([
-    //             'message' => 'The given data is invalid.',
-    //             'errors' => $validator->errors()->array_fill_keys()
+    //             'message' => 'Data',
+    //             'mobilenumbers' => $validator->messages()->all()
     //          ]);        
     //      }else{
     //         $response = redirect()

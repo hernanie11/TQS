@@ -32,7 +32,7 @@ class EarnedPointRequestV2 extends FormRequest
             'data.*.amount' => 'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
             'data.*.points_earn' => 'required',
             'data.*.transaction_datetime' => 'required|date_format:Y-m-d H:i:s',
-            'data.*.store_code' => 'required',
+            'data.*.store_code' => 'required|exists:stores,code',
         ];
         foreach($this->request->get('data') as $key => $val)
         {

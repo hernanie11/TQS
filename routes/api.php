@@ -101,7 +101,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
         //Report 
         Route::post('/report', [ReportManagementController::class, 'GenerateReport']);
-        Route::post('/generate_soa/{id}', [ReportManagementController::class, 'GenerateSOA']);
+        Route::post('/generate_soa/{member_id}', [ReportManagementController::class, 'GenerateSOA']);
         
         //settings
         Route::put('/setting', [SettingsController::class, 'set_earned_points_percentage']);
@@ -111,6 +111,9 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::post('/member/test-import-members', [MemberManagementController::class, 'TestImportMember']);
         Route::post('/member/test-check-members', [MemberManagementController::class, 'TestCheckMember']);
         Route::post('/points/test-import', [PointManagementController::class, 'TestImportEarnedPoints']);//import
+        Route::post('/points/test-check', [PointManagementController::class, 'TestCheckEarnedPoints']);//check 
+        Route::get('/get-setting/logs', [SettingsController::class, 'get_logs']);
+
 
 
 

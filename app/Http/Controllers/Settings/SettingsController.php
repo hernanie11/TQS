@@ -8,6 +8,7 @@ use App\Models\Setting;
 use App\Models\Setting_Log;
 use App\Http\Requests\SettingsRequest;
 
+
 class SettingsController extends Controller
 {
     public function set_earned_points_percentage(SettingsRequest $request){
@@ -55,6 +56,48 @@ class SettingsController extends Controller
         // $response['currentPercentage'] = $get['earning_percentage'];
         // $response['statusCode'] = 200;
         return response()->json($get);
+    }
+
+    public function get_logs(Request $request){
+      
+        // $test = Setting_Log::select('user_id')->chunk(50, function($get)
+        // {
+        //     foreach ($get as $gets)
+        //     {
+             
+               
+        //     }
+          
+        // });
+
+        // return $test;
+
+        // $colors = Setting_Log::select('id')->get();
+        // $chunks = $colors->chunk(100);
+ 
+        // // return($chunks[0]);
+        // $test = array();
+
+        // foreach (Setting_Log::select('id')->cursor() as $flight) {
+        //     array_push($test,$flight);
+        // }
+        // return $test;
+        
+    $id = $request->id;
+     $set = Setting_Log::select('id','remarks')->where('id', $id)->firstOrFail();
+     return $set;
+    //  try{
+    //      $set = Setting_Log::where('id', $id)->firstOrFail();
+    //      return $set;
+
+    //  }
+    //  catch (\Exception $exception){
+      
+    //  }
+     
+    
+ 
+        
     }
 
 }

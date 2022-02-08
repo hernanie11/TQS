@@ -51,7 +51,7 @@ class GenerateFileManagementServices{
             return response()->json(['userdata' => $userdata, 'memberdata' => $memberdata, 'storedata' => $storedata]);
         }
 
-        
-
     }
+
+
 }

@@ -96,4 +96,10 @@ class PointManagementController extends Controller
         $import = PointManagementServices::Test_Import_Earned_Points($all, $created_by);
        return $import; 
     }
+
+   public function  TestCheckEarnedPoints(Request $request){
+    $all = $request->data;
+    $check = PointManagementServices::Test_Check_Earned_Points($all);
+    return $check;
+}
 }

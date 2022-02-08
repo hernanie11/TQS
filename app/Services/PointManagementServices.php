@@ -205,8 +205,6 @@ class PointManagementServices{
         // echo  $test->member_id;
 
        foreach($all as $allpoints){
-
-
         $member_id = $allpoints['member_id'];
         $id = $allpoints['id'];
         $amount = $allpoints['amount'];
@@ -327,6 +325,56 @@ class PointManagementServices{
 
 
      }
+
+     public static function Test_Check_Earned_Points($all){
+        $error = array();
+        $error2 = array();
+        $data = array();
+        $message = collect();
+
+        foreach($all as $allpoints){
+            $member_id = $allpoints['member_id'];
+            $transaction_no = $allpoints['transaction_no'];
+            $amount = $allpoints['amount'];
+            $points_earn = $allpoints['points_earn'];
+            $transaction_datetime = $allpoints['transaction_datetime'];
+
+            if(EarnedPoint::where('transaction_no', $transaction_no)->exists()){
+                $exist2 = EarnedPoint::select('member_id','transaction_no')->where('transaction_no', $transaction_no)->first();
+              //  $test['TransactionNoExist'] = [$exist2];
+                array_push($error2,$exist2);
+               
+            }
+
+            if(EarnedPoint::where('member_id', $member_id)->where('transaction_datetime', $transaction_datetime)->where('points_earn', $points_earn)->exists()){
+                $exist = EarnedPoint::select('member_id','transaction_no')->where('member_id', $member_id)
+                ->where('transaction_datetime', $transaction_datetime)->first();
+             //   $test['TrasactionExist'] = [$exist];
+                 array_push($error, $exist);
+             }
+       }
+
+      
+       if(($error != NULL) and ($error2 != NULL)){
+        return response()->json(['message' =>'The given data was invalid.', 'errors' => [ 'earned_points_exist' => $error, 'transaction_no_exist' => $error2]], 422);
+    }
+
+    if(($error != NULL) and ($error2 == NULL)){
+        return response()->json(['message' =>'The given data was invalid.', 'errors' => ['earned_points_exist' => $error]], 422);
+    }
+    if(($error == NULL) and ($error2 != NULL)){
+        return response()->json(['message' =>'The given data was invalid.', 'errors' => ['transaction_no_exist' => $error2]], 422);
+    }
+    // else{
+    //     return response()>json(['message' => 'No Duplicates'],200);
+
+    // }
+
+     
+    
+    
+     }
+
     
 
     

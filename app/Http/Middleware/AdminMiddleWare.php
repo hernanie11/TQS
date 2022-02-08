@@ -27,7 +27,9 @@ class AdminMiddleWare
             
         }
         else {
-           abort(403);
+
+           return response()->json(['message'=>'Unauthorized access'],403);
+         
         }
 
         return $next($request);

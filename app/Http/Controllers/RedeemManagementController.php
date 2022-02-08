@@ -14,7 +14,7 @@ use App\Http\Requests\RedeemPointRequest;
 
 class RedeemManagementController extends Controller
 {
-    public function Create(Request $request){
+    public function Create(RedeemPointRequest $request){
         $member_id = $request->member_id;
         $points_redeemed = $request->points_redeemed;
         $transaction_datetime = $request->transaction_datetime;
@@ -32,7 +32,7 @@ class RedeemManagementController extends Controller
         return $check;
     }
 
-    public function Import(RedeemPointRequest $request){
+    public function Import(Request $request){
         $all = $request->all();
         $created_by = auth('sanctum')->user()->id;
         $import = RedeemManagementServices::Import_Redeem_Transaction($all, $created_by);

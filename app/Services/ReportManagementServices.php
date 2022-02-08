@@ -584,10 +584,16 @@ class ReportManagementServices{
 
     }
 
+
     public static function Generate_SOA($member_id,$dateStart, $dateEnd){
+
+        if(!Member::where('id',$member_id)->exists()){
+            return response()->json(['message' => 'The given data was invalid.', 'errors' =>['member_id' => 'member id not exist!']],422);
+        }
+
         $customData = array();
         $response = [];
-        $earnedPoints = EarnedPoint::where('member_id', $member_id)->whereBetween('cleared_datetime', [$dateStart, $dateEnd])->get();
+        $earnedPoints = EarnedPoint::where('member_id', $member_id)->where('is_cleared',1)->whereBetween('cleared_datetime', [$dateStart, $dateEnd])->get();
         foreach($earnedPoints as $earnedPoint) {
             $field['date'] = $earnedPoint['cleared_datetime'];
             $field['cleared_point'] = $earnedPoint['points_earn'];
@@ -607,6 +613,9 @@ class ReportManagementServices{
             array_push($customData, $field);
         }
 
+        array_multisort(array_column($customData, 'date'), SORT_ASC, $customData);
+        
+
         $response['soa'] = $customData;
         $response['statusCode'] = 200;
         $total = 0;
@@ -614,22 +623,22 @@ class ReportManagementServices{
         foreach($customData as $data => $value) {
             $sum = $customData[$data]['cleared_point'] + $total;
             // $customData[$data]['cleared_point']
-            $customData[$data]['total'] = $sum;
+            //$customData[$data]['total'] = $sum;
+            $customData[$data]['total'] = number_format($sum, 2);
 
             $total = $sum;
+           // round($sum, 2)
 
             if ($customData[$data]['redeemed_point']) {
                 $total = $total - $customData[$data]['redeemed_point'];
-                $customData[$data]['total'] = $total;
+                //$customData[$data]['total'] = $total;
+                $customData[$data]['total'] = number_format($total, 2);
             }
         }
 
         return $customData;
-
-        return $soa;
-        
-        
-        
     }
+
+ 
 
 }

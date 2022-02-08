@@ -25,19 +25,19 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => 'required',
+            'code' => 'required|unique:stores,code',
             'name' => 'required',
             'area' => 'required',
             'region' => 'required',
             'cluster' => 'required',
-            'business_model' => 'required|in:FOX,FO'
+            'business_model' => 'required|exists:business_categories,name'
         ];
     }
 
     public function messages()
     {
         return [
-            'business_model.in' => 'Business Category must be FO or FOX!',
+            'business_model.exists' => 'business model not found in business_categories',
 
         ];
     }

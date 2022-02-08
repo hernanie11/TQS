@@ -36,33 +36,29 @@ class StoreManagementServices
     }
 
     public static function Create_Store($code, $name, $area, $region, $cluster, $business_model, $created_by){
-        if(Store::where('code', $code)->exists()){
-            return response()->json(['message' => 'Store Code Already Exists!!']);  
-        }
-        else {
+      
             
             // if(($business_model != "FO") and ($business_model != "FOX")){
             //     return response([
             //         'error_message' => $business_model . ' is not a value'], 200);
             // }
+            $test_business_model = preg_replace("/[^A-Z]+/", "", $code);
+            $business_category = Business_Category::select('id')->where('name',$test_business_model)->first();
             
-                $store = Store::create([
-                    'businesscategory_id' => 1,
-                    'code' => $code,
-                    'name' =>  $name,
-                    'area' => $area,
-                    'region' => $region,
-                    'cluster' => $cluster,
-                    'business_model' => $business_model,
-                    'token' => (new Token())->Unique('stores', 'token', 60),
-                    'is_active' => true,
-                    'created_by' => $created_by
-                ]);
-                //return $store;
-                return response()->json(['message' => 'Store Successfully created', 'isCreated' => true]);     
-           
-
-       }
+        $store = Store::create([
+            'businesscategory_id' => $business_category->id,
+            'code' => $code,
+            'name' =>  $name,
+            'area' => $area,
+            'region' => $region,
+            'cluster' => $cluster,
+            'business_model' => $test_business_model,
+            'token' => (new Token())->Unique('stores', 'token', 60),
+            'is_active' => true,
+            'created_by' => $created_by
+        ]);
+        return response()->json(['message' => 'Store Successfully created', 'isCreated' => true]);     
+  
     }
 
     public static function Update_Store_Status($id, $is_active){

@@ -23,13 +23,23 @@ class RedeemPointRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        // return [
             
-            '*.member_id' => 'required',
-            '*.points_redeemed' => 'required',
-            '*.transaction_datetime' => 'required|date_format:Y-m-d H:i:s',
-            '*.store_code' => 'required',
-            '*.store_name' => 'required',
+        //     '*.member_id' => 'required',
+        //     '*.points_redeemed' => 'required',
+        //     '*.transaction_datetime' => 'required|date_format:Y-m-d H:i:s',
+        //     '*.store_code' => 'required',
+        //     '*.store_name' => 'required',
+            
+        // ];
+        
+        return [
+//'*.*' => 'unique:redeeming_transaction,member_id,points_redeemed,transaction_datetime',
+            'member_id' => 'required',
+            'points_redeemed' => 'required',
+            'transaction_datetime' => 'required|date_format:Y-m-d H:i:s|after_or_equal:today',
+            'store_code' => 'required',
+            'store_name' => 'required',
             
         ];
     }
