@@ -133,10 +133,10 @@ class AccountManagementServices
     }
 
     public static function Reset_Password($id){
-         $password = "1234";
+        $password = "1234";
         $hashpass = Hash::make($password);
         $update = User::where('id', $id)->update(['password' => $hashpass]);
-        return response([
+        return response()->json([
          'message' => 'User Password is Successfully Reset!',  'isReset' => true] , 200);
     }
 

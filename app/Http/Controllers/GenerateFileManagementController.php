@@ -17,7 +17,8 @@ class GenerateFileManagementController extends Controller
         $user = $request->user_account;
         $member = $request->member;
         $store = $request->store;
-        $generate = GenerateFileManagementServices::GenerateFile($user, $member, $store);
+        $settings = $request->settings;
+        $generate = GenerateFileManagementServices::GenerateFile($user, $member, $store, $settings);
        return $generate;
     }
 }

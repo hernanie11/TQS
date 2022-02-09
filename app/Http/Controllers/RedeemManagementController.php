@@ -26,7 +26,7 @@ class RedeemManagementController extends Controller
 
     }
 
-    public function Check(RedeemPointRequest $request){
+    public function Check(Request $request){
         $all = $request->all();
         $check = RedeemManagementServices::Check_Reedemed_Points($all);
         return $check;

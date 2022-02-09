@@ -16,11 +16,11 @@ class SettingsController extends Controller
         $user_id = Auth()->user()->id;
         $remarks = $request->remarks;
         $settings = Setting::select('earning_percentage')->first();
-        if($settings->where('earning_percentage', $set_percentage)->exists()){
+        if(Setting::select('earning_percentage')->where('earning_percentage', $set_percentage)->exists()){
             return response()->json(['code' => '409', 'message' => 'No Changes'], 409);
         }
         else{
-            if($settings == null){
+            if(empty($settings)){
                 $create = Setting::create([
                     'earning_percentage' => $set_percentage,   
                 ]);
@@ -58,46 +58,6 @@ class SettingsController extends Controller
         return response()->json($get);
     }
 
-    public function get_logs(Request $request){
-      
-        // $test = Setting_Log::select('user_id')->chunk(50, function($get)
-        // {
-        //     foreach ($get as $gets)
-        //     {
-             
-               
-        //     }
-          
-        // });
-
-        // return $test;
-
-        // $colors = Setting_Log::select('id')->get();
-        // $chunks = $colors->chunk(100);
- 
-        // // return($chunks[0]);
-        // $test = array();
-
-        // foreach (Setting_Log::select('id')->cursor() as $flight) {
-        //     array_push($test,$flight);
-        // }
-        // return $test;
-        
-    $id = $request->id;
-     $set = Setting_Log::select('id','remarks')->where('id', $id)->firstOrFail();
-     return $set;
-    //  try{
-    //      $set = Setting_Log::where('id', $id)->firstOrFail();
-    //      return $set;
-
-    //  }
-    //  catch (\Exception $exception){
-      
-    //  }
-     
-    
- 
-        
-    }
+   
 
 }

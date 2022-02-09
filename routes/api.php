@@ -33,6 +33,12 @@ Route::post('register', [AuthController::class, 'CreateAccount']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
 
+//TQS Client
+Route::get('/stores', [StoreManagementController::class, 'GetStores']);
+Route::post('/validate-store', [StoreManagementController::class, 'ValidatedStore']);
+//
+
+
 
 Route::group(['middleware' => ['auth:sanctum']], function() {
    Route::post('isLoggedIn', [AuthController::class, 'access_permission']); //Authentication
@@ -112,7 +118,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::post('/member/test-check-members', [MemberManagementController::class, 'TestCheckMember']);
         Route::post('/points/test-import', [PointManagementController::class, 'TestImportEarnedPoints']);//import
         Route::post('/points/test-check', [PointManagementController::class, 'TestCheckEarnedPoints']);//check 
-        Route::get('/get-setting/logs', [SettingsController::class, 'get_logs']);
+      
 
 
 
@@ -151,6 +157,6 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
 
 
-Route::post('createaccount', [AccountManagementController::class, 'Create']);
-Route::post('business_category', [StoreManagementController::class, 'CreateBusiness']);
-Route::post('store', [StoreManagementController::class, 'CreateStore']);
+// Route::post('createaccount', [AccountManagementController::class, 'Create']);
+// Route::post('business_category', [StoreManagementController::class, 'CreateBusiness']);
+// Route::post('store', [StoreManagementController::class, 'CreateStore']);

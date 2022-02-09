@@ -20,11 +20,13 @@ class Store extends Model
         'business_model',
         'token',
         'is_active',
-        'created_by' 
+        'created_by',
+        'is_activated' 
     ];
 
     protected $casts = [
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
+        'is_activated' => 'boolean',
         
     ];
 

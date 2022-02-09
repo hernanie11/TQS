@@ -36,14 +36,11 @@ class StoreManagementServices
     }
 
     public static function Create_Store($code, $name, $area, $region, $cluster, $business_model, $created_by){
-      
-            
-            // if(($business_model != "FO") and ($business_model != "FOX")){
-            //     return response([
-            //         'error_message' => $business_model . ' is not a value'], 200);
-            // }
-            $test_business_model = preg_replace("/[^A-Z]+/", "", $code);
-            $business_category = Business_Category::select('id')->where('name',$test_business_model)->first();
+           // $test_business_model = preg_replace("/[^A-Z]+/", "", $code);
+           if(!Business_Category::where('name',$business_model)->exists()){
+               return response()->json(['message'=>'The given data was invalid.', 'error'=>['data'=>'Business Category not exists!']]);
+           }
+            $business_category = Business_Category::select('id')->where('name',$business_model)->first();
             
         $store = Store::create([
             'businesscategory_id' => $business_category->id,
@@ -52,12 +49,12 @@ class StoreManagementServices
             'area' => $area,
             'region' => $region,
             'cluster' => $cluster,
-            'business_model' => $test_business_model,
+            'business_model' => $business_model,
             'token' => (new Token())->Unique('stores', 'token', 60),
             'is_active' => true,
             'created_by' => $created_by
         ]);
-        return response()->json(['message' => 'Store Successfully created', 'isCreated' => true]);     
+        return response()->json(['code'=> '201','message' => 'Store Successfully created', 'isCreated' => true],201);     
   
     }
 
@@ -80,6 +77,7 @@ class StoreManagementServices
         return response([
             'message' => 'No Store Found!'] , 200);
        }
+       
     }
 
     public static function Update_Store($id, $all, $code){ 
@@ -99,7 +97,6 @@ class StoreManagementServices
         else{
             return response([
                 'message' => 'No Store Found!',  'isUpdated' => false] , 200);
-        
         }
 
     }
@@ -125,48 +122,6 @@ class StoreManagementServices
             return $search;
 
         }
-
-        
-
-
-        // if(isset($searchvalue)){
-        //     $search = Store::select('id', 'code', 'name', 'area', 'region', 'cluster', 'business_model', DB::raw('if(is_active = 1, "Active", "Inactive") as status'), 'created_at')->where('name', 'LIKE', "%{$searchvalue}%")->first();
-            
-        //     if($search == true){
-        //         $search = Store::select('id', 'code', 'name', 'area', 'region', 'cluster', 'business_model', DB::raw('if(is_active = 1, "Active", "Inactive") as status'), 'created_at')->where('name', 'LIKE', "%{$searchvalue}%")->get();
-        //         return $search;
-        //     }
-        //     if($search == NULL){
-        //         $area = Store::where('area', 'LIKE', "%{$searchvalue}%")->first();
-        //         $code = Store::where('code', 'LIKE', "%{$searchvalue}%")->first();
-        //         $region = Store::where('region', 'LIKE', "%{$searchvalue}%")->first();
-        //         $cluster = Store::where('cluster', 'LIKE', "%{$searchvalue}%")->first();
-                
-        //         if($area != NULL){
-        //             $area = Store::select('id', 'code', 'name', 'area', 'region', 'cluster', 'business_model', DB::raw('if(is_active = 1, "Active", "Inactive") as status'), 'created_at')->where('area', 'LIKE', "%{$searchvalue}%")->get();
-        //             return $area;
-        //         }
-        //         if($code != NULL){
-        //             $code = Store::select('id', 'code', 'name', 'area', 'region', 'cluster', 'business_model', DB::raw('if(is_active = 1, "Active", "Inactive") as status'), 'created_at')->where('code', 'LIKE', "%{$searchvalue}%")->get();
-        //             return $code;
-        //         }
-        //         if($region != NULL){
-        //             $region = Store::select('id', 'code', 'name', 'area', 'region', 'cluster', 'business_model', DB::raw('if(is_active = 1, "Active", "Inactive") as status'), 'created_at')->where('region', 'LIKE', "%{$searchvalue}%")->get();
-        //             return $region;
-        //         }
-            
-        //         if($cluster != NULL){
-        //             $cluster = Store::select('id', 'code', 'name', 'area', 'region', 'cluster', 'business_model', DB::raw('if(is_active = 1, "Active", "Inactive") as status'), 'created_at')->where('cluster', 'LIKE', "%{$searchvalue}%")->get();
-        //             return $cluster;
-        //         }
-
-        //         if(($area == NULL) and ($code == NULL) and ($region == NULL) and ($cluster == NULL)){
-        //             return [];
-        //         }
-
-        //     }
-        
-        // }
            
     }
    
@@ -181,4 +136,26 @@ class StoreManagementServices
          'data' => $response] , 200);
 
     }
+
+
+    //TQSclient
+
+    public static function Get_Stores(){
+        $store = Store::select('id', 'code', 'name')->where('is_activated',0)->get();
+        return $store;
+    }
+
+    public static function Validated_Store($id, $token){
+        $store = Store::where('id', $id)->where('token', $token);
+        if($store->exists()){
+          //  $store->update(['is_activated' => true]);
+            return response()->json(['message'=>'Token is valid', 'valid'=>true],200);
+        }
+        else{
+            return response()->json(['message'=>'Token is not valid', 'valid'=>false],422);
+        }
+
+    }
+
+    
 }

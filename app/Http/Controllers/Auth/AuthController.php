@@ -30,25 +30,6 @@ class AuthController extends Controller
        // $stringtojson = json_encode($acessConvertedToString);
 
    
-    //   if($role == "admin"){
-    //       foreach($access_permission as $access){
-    //         if($access == "earning"){
-    //             $ace = "earning";
-    //             if(Access::where('role', $role)->where('access', $ace)->exists()){        
-    //             }
-    //             else {
-    //                 return response([
-    //                          'message' => 'Earning access not assigneable to role admin '], 200);
-    //             }
-    //         }
-    //       }
-    //   }
-
-    // if(($role != "admin") and ($role != "cashier")){
-    //     return response([
-    //         'error_message' => $role . ' is not a value'], 200);
-    // }
-   
     if($role == "admin"){
 
         foreach($access_permission as $access){
@@ -136,13 +117,22 @@ class AuthController extends Controller
 
     public function login(AuthRequest $request){
         $username = $request->username;
-        $password = $request->password;        
+        $password = $request->password;
+        
+     
 
-        $user = User::select('users.id','users.first_name', 'users.last_name', 'users.username', 'users.password', 'account_roles.user_id', 'account_roles.role', 'account_roles.access_permission')
+        $user = User::select('users.id','users.first_name', 'users.last_name', 'users.username', 'users.password', 'account_roles.user_id', 'account_roles.role', 'account_roles.access_permission','users.is_active')
         ->leftJoin('account_roles', function($join){
             $join->on('users.id', 'account_roles.user_id');
         })->where('username', $username)->first();
 
+        if($user->is_active == false){
+            return response([
+                'message' => 'User Account is Deactivated',
+                'isAuthenticated' => false
+            ], 200);
+        }
+     
         if(!$user || !Hash::check($password, $user->password)) {
             return response([
                 'message' => 'Username or Password is incorrect!! ',
@@ -160,7 +150,7 @@ class AuthController extends Controller
             'isAuthenticated' => true,
             'data' => $response
         ], 200);
-     
+    
     }
 
     public function logout(Request $request){  

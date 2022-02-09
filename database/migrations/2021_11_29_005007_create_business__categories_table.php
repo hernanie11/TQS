@@ -33,6 +33,7 @@ class CreateBusinessCategoriesTable extends Migration
             $table->string('token');
             $table->boolean('is_active');
             $table->string('created_by');
+            $table->boolean('is_activated')->default(false);
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
             $table->foreign('businesscategory_id')

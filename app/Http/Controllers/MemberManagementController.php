@@ -91,18 +91,6 @@ class MemberManagementController extends Controller
     public function ImportMember(MemberImportRequest $request){
         $all = $request->all();
         $created_by = auth('sanctum')->user()->id;
-        // $all2 = $request->all();
-
-        // $first_name = $request->first_name;
-        // $last_name = ucfirst($request->last_name);
-        // $gender = $request->gender;
-        // $birthday = $request->birthday;
-        // $barangay = ucfirst($request->barangay);
-        // $municipality = ucfirst($request->municipality);
-        // $province = ucfirst($request->province);
-        // $email = $request->email;
-        // $mobile_number = $request->mobile_number;
-        
         $upload =  MemberManagementServices::Import_Member($all, $created_by);
         return $upload;
         

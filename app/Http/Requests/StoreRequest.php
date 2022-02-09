@@ -29,15 +29,15 @@ class StoreRequest extends FormRequest
             'name' => 'required',
             'area' => 'required',
             'region' => 'required',
-            'cluster' => 'required',
-            'business_model' => 'required|exists:business_categories,name'
+            'cluster' => 'required'
+            //'business_model' => 'required|exists:business_categories,name'
         ];
     }
 
     public function messages()
     {
         return [
-            'business_model.exists' => 'business model not found in business_categories',
+            //'business_model.exists' => 'business model not found in business_categories',
 
         ];
     }

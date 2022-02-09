@@ -31,7 +31,8 @@ class StoreManagementController extends Controller
         $area = ucfirst($request->area);
         $region = ucfirst($request->region);
         $cluster = ucfirst($request->cluster);
-        $business_model = $request->business_model;
+        $test_business_model = preg_replace("/[^A-Z]+/", "", $code);
+        $business_model = $test_business_model;
         $created_by = auth('sanctum')->user()->id;
         $createstore = StoreManagementServices::Create_Store($code, $name, $area, $region, $cluster, $business_model, $created_by);
         return $createstore;
@@ -69,5 +70,19 @@ class StoreManagementController extends Controller
     public function RegenerateToken(){
         $token = StoreManagementServices::Regenerate_Token();
         return $token;
+    }
+
+    ///TQSclient
+
+    public function GetStores(){
+        $stores = StoreManagementServices::Get_Stores();
+        return $stores;
+    }
+
+    public function ValidatedStore(Request $request){
+        $id = $request->store_id;
+        $token = $request->token;
+        $validate = StoreManagementServices::Validated_Store($id, $token);
+        return $validate;
     }
 }
